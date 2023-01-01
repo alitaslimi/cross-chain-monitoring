@@ -13,7 +13,7 @@ st.set_page_config(page_title='NFT Marketplaces - Cross Chain Monitoring', page_
 st.title('🛒 NFT Marketplaces')
 
 # Style
-with open('style.css')as f:
+with open('CrossChainMonitoring/style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
 # Data Sources
