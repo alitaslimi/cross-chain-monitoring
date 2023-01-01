@@ -8,7 +8,7 @@ st.title('Cross Chain Monitoring Tool')
 
 # Content
 c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14, c15 = st.columns(15)
-c1.image(Image.open('/images/ethereum-logo.png'))
+c1.image(Image.open('./images/ethereum-logo.png'))
 c2.image(Image.open('images/bsc-logo.png'))
 c3.image(Image.open('images/polygon-logo.png'))
 c4.image(Image.open('images/solana-logo.png'))
