@@ -1,2 +1,2 @@
 # Flipside
-Blockchain data analysis dashboards made for Flipside Crypto
+This tool was originally created for the Flipside Crypto World Cup tournament using Streamlit.
