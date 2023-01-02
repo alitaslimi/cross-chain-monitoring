@@ -79,7 +79,7 @@ st.write(
     """
 )
 
-c1, c2 = st.columns(2)
+c1, c2, c3 = st.columns(3)
 with c1:
     st.info('**Data Analyst: [@AliTslm](https://twitter.com/AliTslm)**', icon="💡")
 with c2:
