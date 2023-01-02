@@ -45,7 +45,7 @@ st.write(
 st.subheader('Methodology')
 st.write(
     """
-    The data for this cross-chain comparison were selected from the [**Flipside Crypto**](https://flipsidecrypto.xyz/)
+    The data for this cross-chain comparison were selected from the [**Flipside Crypto**](https://flipsidecrypto.xyz)
     data platform by using its **REST API**. These queries are currently set to **re-run every 24 hours** to cover the latest
     data and are imported as a JSON file directly to each page. The data were selected with a **1 day delay** for all
     blockchains to be in sync with one another. The codes for this tool are saved and accessible in its 
@@ -81,6 +81,8 @@ st.write(
 
 c1, c2 = st.columns(2)
 with c1:
-    st.info('**Data Analyst: [@AliTslm](https://twitter.com/AliTslm)**', icon="💻")
+    st.info('**Data Analyst: [@AliTslm](https://twitter.com/AliTslm)**', icon="💡")
 with c2:
-    st.info('**Data: [Flipside Crypto](https://flipsidecrypto.xyz/)**', icon="🧠")
+    st.info('**GitHub: [@alitaslimi](https://github.com/alitaslimi)**', icon="💻")
+with c3:
+    st.info('**Data: [Flipside Crypto](https://flipsidecrypto.xyz)**', icon="🧠")
