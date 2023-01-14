@@ -28,11 +28,14 @@ def get_data(query):
         return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/9d8d54d4-b700-4d85-af17-8c29aa29d334/data/latest')
     elif query == 'Transactions Fee Payers':
         return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/7eae69ea-2387-420d-b4b9-6eceeb5ef22d/data/latest')
+    elif query == 'Transactions New Users':
+        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/d81c5861-0792-43ec-9f92-d89fbcf85e79/data/latest')
     return None
 
 transactions_overview = get_data('Transactions Overview')
 transactions_daily = get_data('Transactions Daily')
 transactions_heatmap = get_data('Transactions Heatmap')
+transactions_new_users = get_data('Transactions New Users')
 
 # Filter the blockchains
 options = st.multiselect(
@@ -63,7 +66,8 @@ elif len(options) == 1:
     
     st.subheader('Activity Over Time')
     df = transactions_daily.query("Blockchain == @options")
-
+    dfnu = transactions_new_users.query("Blockchain == @options")
+    
     fig = sp.make_subplots(specs=[[{'secondary_y': True}]])
     fig.add_trace(go.Bar(x=df['Date'], y=df['Transactions'], name='Transactions'), secondary_y=False)
     fig.add_trace(go.Line(x=df['Date'], y=df['Blocks'], name='Blocks'), secondary_y=True)
@@ -72,8 +76,11 @@ elif len(options) == 1:
     fig.update_yaxes(title_text='Blocks', secondary_y=True)
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
-    fig = px.area(df, x='Date', y='Users', title='Daily Active Addresses')
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Users')
+    fig = sp.make_subplots()
+    fig.add_trace(go.Bar(x=df['Date'], y=df['Users'], name='Active Users'))
+    fig.add_trace(go.Line(x=dfnu['Date'], y=dfnu['NewUsers'], name='New Users'))
+    fig.update_layout(title_text='Daily Active and New Addresses')
+    fig.update_yaxes(title_text='Users')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     fig = sp.make_subplots(specs=[[{'secondary_y': True}]])
@@ -126,13 +133,18 @@ else:
 
     st.subheader('Activity Over Time')
     df = transactions_daily.query('Blockchain == @options')
+    dfnu = transactions_new_users.query("Blockchain == @options")
 
     fig = px.line(df, x='Date', y='Transactions', color='Blockchain', title='Daily Total Transactions', log_y=True)
     fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Transactions')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     fig = px.line(df, x='Date', y='Users', color='Blockchain', title='Daily Active Addresses', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Users')
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Active Users')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+    fig = px.line(dfnu, x='Date', y='NewUsers', color='Blockchain', title='Daily New Addresses', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='New Users')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     
     fig = px.line(df, x='Date', y='Blocks', color='Blockchain', title='Daily Blocks', log_y=True)
