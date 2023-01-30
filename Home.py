@@ -57,13 +57,6 @@ st.write(
     the queries, and also the size of the raw data being too large, it was not feasible to cover data for a longer period,
     or by downloading the data and loading it from the repository itself. Therefore, the REST API was selected as the
     proper form of loading data for the time being.
-
-    Besides the codes and queries mentioned above, the following dashboards created using Flipside Crypto were used
-    as the core references in developing the current tool:
-    - [Flipside World Cup: Gas Guzzlers](https://app.flipsidecrypto.com/dashboard/flipsides-world-cup-gas-guzzlers-iTcitG)
-    - [Flipside World Cup: USDC Transfers](https://app.flipsidecrypto.com/dashboard/flipside-world-cup-usdc-transfers-l-dWsf)
-    - [Flipside World Cup: NFT Sales](https://app.flipsidecrypto.com/dashboard/flipside-world-cup-nft-sales-lDvMLG)
-    - [Flipside World Cup: Cross Chain DeFi Monitoring](https://app.flipsidecrypto.com/dashboard/flipside-world-cup-cross-chain-de-fi-monitoring-bOY5ox)
     """
 )
 
