@@ -6,6 +6,19 @@ from PIL import Image
 st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_chart:', layout='wide')
 st.title('Cross Chain Monitoring Tool')
 
+# Google Analytics
+st.components.v1.html("""
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-PQ45JJR2R7');
+    </script>
+""", height=1, scrolling=False)
+
 # Content
 c1, c2, c3, c4, c5, c6, c7, c8, c9, c10, c11, c12, c13, c14 = st.columns(14)
 c1.image(Image.open('images/ethereum-logo.png'))
