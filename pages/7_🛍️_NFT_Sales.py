@@ -17,6 +17,18 @@ st.title('🛍️ NFT Sales')
 with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
+# Google Analytics
+st.components.v1.html("""
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-PQ45JJR2R7');
+    </script>
+""", height=1, scrolling=False)
+
 # Data Sources
 @st.cache(ttl=600)
 def get_data(query):
