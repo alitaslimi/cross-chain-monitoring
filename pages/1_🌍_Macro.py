@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.subplots as sp
+import data
 
 # Global Variables
 theme_plotly = None # None or streamlit
@@ -13,12 +14,7 @@ week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 st.set_page_config(page_title='Macro - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
 st.title('🌍 Macro KPIs')
 
-# Style
-with open('style.css')as f:
-    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
-
-# Google Analytics
-st.components.v1.html("""
+ga = """
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
     <script>
@@ -28,27 +24,16 @@ st.components.v1.html("""
 
     gtag('config', 'G-PQ45JJR2R7');
     </script>
-""", height=1, scrolling=False)
-    
-# Data Sources
-@st.cache(ttl=600)
-def get_data(query):
-    if query == 'Transactions Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/579714e6-986e-421a-85dd-c32a8b41b25c/data/latest')
-    elif query == 'Transactions Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/4e0c69ff-9395-43c1-af49-f590f864d339/data/latest')
-    elif query == 'Transactions Heatmap':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/9d8d54d4-b700-4d85-af17-8c29aa29d334/data/latest')
-    elif query == 'Transactions Fee Payers':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/7eae69ea-2387-420d-b4b9-6eceeb5ef22d/data/latest')
-    elif query == 'Transactions New Users':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/d81c5861-0792-43ec-9f92-d89fbcf85e79/data/latest')
-    return None
+"""
+st.markdown(ga, unsafe_allow_html=True)
 
-transactions_overview = get_data('Transactions Overview')
-transactions_daily = get_data('Transactions Daily')
-transactions_heatmap = get_data('Transactions Heatmap')
-transactions_new_users = get_data('Transactions New Users')
+with open('style.css')as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
+
+transactions_overview = data.get_data('Transactions Overview')
+transactions_daily = data.get_data('Transactions Daily')
+transactions_heatmap = data.get_data('Transactions Heatmap')
+transactions_new_users = data.get_data('New Users Daily')
 
 # Filter the blockchains
 options = st.multiselect(
@@ -75,7 +60,7 @@ elif len(options) == 1:
         st.metric(label='**Average TPS**', value=str(df['TPS'].map('{:,.2f}'.format).values[0]))
     with c3:
         st.metric(label='**Total Unique Addresses**', value=str(df['Users'].map('{:,.0f}'.format).values[0]))
-        st.metric(label='**Average Daily Active Users**', value=str(df['Users/Day'].map('{:,.0f}'.format).values[0]))
+        st.metric(label='**Average Daily Active Users**', value=str((df['Users'] / 30).map('{:,.0f}'.format).values[0]))
     
     st.subheader('Activity Over Time')
     df = transactions_daily.query("Blockchain == @options")
