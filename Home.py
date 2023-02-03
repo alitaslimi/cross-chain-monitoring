@@ -6,8 +6,22 @@ from PIL import Image
 st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_chart:', layout='wide')
 
 # Google Analytics
-with open('ga.js')as f:
-    st.markdown(f"{f.read()}", unsafe_allow_html = True)
+st.components.html(
+    """
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-2QP9LNWWSV" crossorigin='anonymous'></script>
+        <script crossorigin='anonymous'>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-2QP9LNWWSV');
+        </script>
+    """,
+    width=1, height=1
+)
+# with open('ga.js')as f:
+#     st.markdown(f"{f.read()}", unsafe_allow_html = True)
 # ga = """
 #     <!-- Google tag (gtag.js) -->
 #     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
