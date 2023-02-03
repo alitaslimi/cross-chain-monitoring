@@ -6,18 +6,20 @@ from PIL import Image
 st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_chart:', layout='wide')
 
 # Google Analytics
-ga = """
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+with open('ga.js')as f:
+    st.markdown(f"{f.read()}", unsafe_allow_html = True)
+# ga = """
+#     <!-- Google tag (gtag.js) -->
+#     <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
+#     <script>
+#     window.dataLayer = window.dataLayer || [];
+#     function gtag(){dataLayer.push(arguments);}
+#     gtag('js', new Date());
 
-    gtag('config', 'G-PQ45JJR2R7');
-    </script>
-"""
-st.markdown(ga, unsafe_allow_html=True)
+#     gtag('config', 'G-PQ45JJR2R7');
+#     </script>
+# """
+# st.markdown(ga, unsafe_allow_html=True)
 
 # Title
 st.title('Cross Chain Monitoring Tool')
