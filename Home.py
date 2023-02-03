@@ -9,13 +9,13 @@ st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_cha
 st.components.html(
     """
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-2QP9LNWWSV" crossorigin='anonymous'></script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7" crossorigin='anonymous'></script>
         <script crossorigin='anonymous'>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-2QP9LNWWSV');
+            gtag('config', 'G-PQ45JJR2R7');
         </script>
     """,
     width=1, height=1
