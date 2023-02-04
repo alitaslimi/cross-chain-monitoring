@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # Data Sources
-@st.cache(ttl=1000)
+@st.cache(ttl=1000, allow_output_mutation=True)
 def get_data(query):
     if query == 'Transactions Overview':
         arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/f06a4840-9310-41c7-b2b2-1c812884d728/data/latest')
@@ -76,5 +76,110 @@ def get_data(query):
         return pd.concat(
             [arbitrum, avalanche, axelar, bsc, cosmos, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana]
                 ).sort_values(['Date', 'Blockchain']).reset_index(drop=True)
+
+    elif query == 'Fee Payers':
+        arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/fa2e6071-6c07-4efd-a765-99a002b77821/data/latest')
+        avalanche = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/6429c5d5-e630-44b2-ad38-10c166a7939a/data/latest')
+        axelar = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ef7485a3-b99a-4ed1-a9fe-f8b7dc237e98/data/latest')
+        bsc = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/2520e7d9-8529-4938-b155-51ffa65952e5/data/latest')
+        cosmos = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/1ba5412c-50aa-458f-8bdd-dbab0118855d/data/latest')
+        ethereum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/75234e0e-851b-413c-b76a-367209f0f907/data/latest')
+        flow = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ffd908f4-8596-4810-88b4-498bf1fad2f7/data/latest')
+        gnosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/fd5da965-939d-48a6-9459-9d8f40a684e8/data/latest')
+        near = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/0b30976a-25a8-4b79-8fcd-07b6901d6a5c/data/latest')
+        optimism = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/6686a6d9-5eb0-4c34-86bc-46cdb949202f/data/latest')
+        osmosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/2b1e0d17-0eb5-4235-bf5f-63b0408dc98b/data/latest')
+        polygon = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/0765116e-4a51-4853-b3f6-af21c1f6aedf/data/latest')
+        solana = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/bfbeafa1-6cd1-4680-a8fb-b7246df70b84/data/latest')
+        return pd.concat(
+            [arbitrum, avalanche, axelar, bsc, cosmos, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana]
+                ).sort_values('Blockchain').reset_index(drop=True)
+
+    elif query == 'Swaps Overview':
+        arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/e0379ed9-44e9-4cad-8a5b-885bf08836a5/data/latest')
+        avalanche = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/642c87d9-461e-40c4-b904-f3d1fc5ee349/data/latest')
+        bsc = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/18c33d5b-9dd5-403f-95a0-c562ca61736f/data/latest')
+        ethereum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/bba010dd-b5ce-4682-a04c-ab30282b07ff/data/latest')
+        flow = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/025ca622-5f5a-4aa8-bc0c-794d49e5e651/data/latest')
+        gnosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/7b78d096-8e7a-4a8a-bd58-aa23ea963d9e/data/latest')
+        near = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/89e9448d-1562-44ac-9afe-86d70a53de31/data/latest')
+        optimism = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/139e40ba-ebde-4be6-afc9-31a6c984d720/data/latest')
+        osmosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/0dfb8d98-b739-4145-adea-ea5c3e739a1d/data/latest')
+        polygon = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/1a236b32-9cd4-4cba-a57a-cdb273d90d61/data/latest')
+        solana = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/12eb8a6c-af55-4b84-9b8c-c7cf132f33fd/data/latest')
+        thorchain = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/fb99ddc5-0570-4219-89e3-3ac4d9e236b7/data/latest')
+        return pd.concat(
+            [arbitrum, avalanche, bsc, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana, thorchain]
+                ).sort_values('Blockchain').reset_index(drop=True)
+
+    elif query == 'Swaps Daily':
+        arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/0d131400-82a0-4fb8-9032-b548da63f9b1/data/latest')
+        avalanche = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/53313b42-f68a-41ea-95d3-c37878d8b025/data/latest')
+        bsc = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/c4112917-9a2e-4055-bf96-c624de286149/data/latest')
+        ethereum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/8d4ebda0-697d-4310-8611-095555c25dad/data/latest')
+        flow = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/be80508e-f217-42fa-b0ef-47f49a3526b2/data/latest')
+        gnosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/7f37184a-f731-405b-9f4d-3b7cd49a4779/data/latest')
+        near = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ae24a06b-c590-4d44-81f3-223fd8ba4163/data/latest')
+        optimism = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/dc073155-1bde-4607-b766-2d3e402cacf1/data/latest')
+        osmosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/2b30893a-cfec-4341-8091-6b601cd80ea0/data/latest')
+        polygon = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/d6cc6941-c6f3-4a98-b2a2-03397ed7c930/data/latest')
+        solana = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/d56ebd12-2f0d-4ca1-8226-71450c2a2b20/data/latest')
+        thorchain = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/457c96a4-db5c-47ee-939a-9d5af8fdf414/data/latest')
+        return pd.concat(
+            [arbitrum, avalanche, bsc, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana, thorchain]
+                ).sort_values(['Date', 'Blockchain']).reset_index(drop=True)
+
+    elif query == 'Swaps Heatmap':
+        arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/dd45ef88-7d17-43ef-8cd4-a6f3eba37cb0/data/latest')
+        avalanche = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ab6a2adf-a410-4bc3-9a84-d530d8f34cf0/data/latest')
+        bsc = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/4211617f-263f-44f2-b2ae-6c25fb024ede/data/latest')
+        ethereum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/07957cc6-6543-4e85-9432-7281d44230ad/data/latest')
+        flow = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/dccbbe78-3d61-4c75-a7c9-8b86b24bb4a4/data/latest')
+        gnosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/53fe4557-6d1b-4f7a-81c3-4f3df5ba2972/data/latest')
+        near = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/caccd7b2-8e7f-443b-a869-e835200c600c/data/latest')
+        optimism = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/889af633-47fd-4bf6-81ea-8337710b1f33/data/latest')
+        osmosis = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/ead43212-59f5-4507-ab97-5dce45707d74/data/latest')
+        polygon = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/6eaa530c-bce3-441c-b0d0-58ca7397ddde/data/latest')
+        solana = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/6e67fc7b-ade7-4463-9d84-1a965c2ab440/data/latest')
+        thorchain = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/d3ba2a17-4c2f-4127-b01e-7c7f839f55fb/data/latest')
+        return pd.concat(
+            [arbitrum, avalanche, bsc, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana, thorchain]
+                ).sort_values(['Day', 'Hour', 'Blockchain']).reset_index(drop=True)
+
+    # elif query == 'Swaps Overview':
+    #     arbitrum = pd.read_json('')
+    #     avalanche = pd.read_json('')
+    #     axelar = pd.read_json('')
+    #     bsc = pd.read_json('')
+    #     cosmos = pd.read_json('')
+    #     ethereum = pd.read_json('')
+    #     flow = pd.read_json('')
+    #     gnosis = pd.read_json('')
+    #     near = pd.read_json('')
+    #     optimism = pd.read_json('')
+    #     osmosis = pd.read_json('')
+    #     polygon = pd.read_json('')
+    #     solana = pd.read_json('')
+    #     return pd.concat(
+    #         [arbitrum, avalanche, bsc, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana, thorchain]
+    #             ).sort_values('Blockchain').reset_index(drop=True)
+
+    # elif query == 'Swaps Overview':
+    #     arbitrum = pd.read_json('')
+    #     avalanche = pd.read_json('')
+    #     axelar = pd.read_json('')
+    #     bsc = pd.read_json('')
+    #     cosmos = pd.read_json('')
+    #     ethereum = pd.read_json('')
+    #     flow = pd.read_json('')
+    #     gnosis = pd.read_json('')
+    #     near = pd.read_json('')
+    #     optimism = pd.read_json('')
+    #     osmosis = pd.read_json('')
+    #     polygon = pd.read_json('')
+    #     solana = pd.read_json('')
+    #     return pd.concat(
+    #         [arbitrum, avalanche, axelar, bsc, cosmos, ethereum, flow, gnosis, near, optimism, osmosis, polygon, solana]
+    #             ).sort_values('Blockchain').reset_index(drop=True)
 
     return None
