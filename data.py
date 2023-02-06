@@ -3,7 +3,7 @@ import streamlit as st
 import pandas as pd
 
 # Data Sources
-@st.cache(ttl=1000, allow_output_mutation=True)
+# @st.cache(ttl=1000, allow_output_mutation=True)
 def get_data(query):
     if query == 'Transactions Overview':
         arbitrum = pd.read_json('https://api.flipsidecrypto.com/api/v2/queries/f06a4840-9310-41c7-b2b2-1c812884d728/data/latest')
