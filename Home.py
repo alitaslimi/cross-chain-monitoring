@@ -9,8 +9,8 @@ st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_cha
 st.components.v1.html(
     """
         <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7" crossorigin='anonymous'></script>
-        <script crossorigin='anonymous'>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
+        <script>
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
