@@ -4,56 +4,31 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.subplots as sp
+import data
 
 # Global Variables
 theme_plotly = None # None or streamlit
 week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# Layout
+# Config
 st.set_page_config(page_title='USDC Transfers - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
+
+# Title
 st.title('💸 USDC Transfers')
 
 # Style
 with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
-# Google Analytics
-st.components.v1.html("""
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PQ45JJR2R7');
-    </script>
-""", height=1, scrolling=False)
-
 # Data Sources
-@st.cache(ttl=600)
-def get_data(query):
-    if query == 'Transfers Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/41eb418f-d231-4a1f-a1c8-e7cc0ff2fddb/data/latest')
-    elif query == 'Transfers Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/76276234-81ba-44fd-8341-7cde62d30abc/data/latest')
-    elif query == 'Transfers Heatmap':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/933b930f-b611-469e-9e03-b0d5c5b0242b/data/latest')
-    elif query == 'Transfers Distribution':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/a17c8548-2834-4600-bc78-a0efb6d12de4/data/latest')
-    elif query == 'Transfers Transferring Users':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/2f9e94d0-79b9-49a5-be9a-eb289e9890d4/data/latest')
-    elif query == 'Transfers Wallet Types':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/cc07b022-fd08-459f-a9a3-cf8082221414/data/latest')
-    return None
+transfers_overview = data.get_data('Transfers Overview')
+transfers_daily = data.get_data('Transfers Daily')
+transfers_heatmap = data.get_data('Transfers Heatmap')
+transfers_distribution = data.get_data('Transfers Distribution')
+transfers_transferring_users = data.get_data('Transfers Transferring Users')
+transfers_wallet_types = data.get_data('Transfers Wallet Types')
 
-transfers_overview = get_data('Transfers Overview')
-transfers_daily = get_data('Transfers Daily')
-transfers_heatmap = get_data('Transfers Heatmap')
-transfers_distribution = get_data('Transfers Distribution')
-transfers_transferring_users = get_data('Transfers Transferring Users')
-transfers_wallet_types = get_data('Transfers Wallet Types')
-
-# Filter the blockchains
+# Filter
 options = st.multiselect(
     '**Select your desired blockchains:**',
     options=transfers_overview['Blockchain'].unique(),
@@ -65,7 +40,7 @@ options = st.multiselect(
 if len(options) == 0:
     st.warning('Please select at least one blockchain to see the metrics.')
 
-# Single chain Analysis
+# Single Chain Analysis
 elif len(options) == 1:
     st.subheader('Overview')
     df = transfers_overview.query('Blockchain == @options')

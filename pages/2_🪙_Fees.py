@@ -4,50 +4,29 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import plotly.subplots as sp
+import data
 
 # Global Variables
 theme_plotly = None # None or streamlit
 week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# Layout
+# Config
 st.set_page_config(page_title='Fees - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
+
+# Title
 st.title('🪙 Transaction Fees')
 
 # Style
 with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
-# Google Analytics
-st.components.v1.html("""
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PQ45JJR2R7');
-    </script>
-""", height=1, scrolling=False)
-
 # Data Sources
-@st.cache(ttl=600)
-def get_data(query):
-    if query == 'Transactions Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/579714e6-986e-421a-85dd-c32a8b41b25c/data/latest')
-    elif query == 'Transactions Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/4e0c69ff-9395-43c1-af49-f590f864d339/data/latest')
-    elif query == 'Transactions Heatmap':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/9d8d54d4-b700-4d85-af17-8c29aa29d334/data/latest')
-    elif query == 'Transactions Fee Payers':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/7eae69ea-2387-420d-b4b9-6eceeb5ef22d/data/latest')
-    return None
+transactions_overview = data.get_data('Transactions Overview')
+transactions_daily = data.get_data('Transactions Daily')
+transactions_heatmap = data.get_data('Transactions Heatmap')
+transactions_fee_payers = data.get_data('Fee Payers')
 
-transactions_overview = get_data('Transactions Overview')
-transactions_daily = get_data('Transactions Daily')
-transactions_heatmap = get_data('Transactions Heatmap')
-transactions_fee_payers = get_data('Transactions Fee Payers')
-
-# Filter the blockchains
+# Filter
 options = st.multiselect(
     '**Select your desired blockchains:**',
     options=transactions_overview['Blockchain'].unique(),
@@ -59,7 +38,7 @@ options = st.multiselect(
 if len(options) == 0:
     st.warning('Please select at least one blockchain to see the metrics.')
 
-# Single chain Analysis
+# Single Chain Analysis
 elif len(options) == 1:
     st.subheader('Overview')
     df = transactions_overview.query("Blockchain == @options")

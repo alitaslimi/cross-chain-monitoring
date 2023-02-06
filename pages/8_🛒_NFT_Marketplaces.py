@@ -3,54 +3,27 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import data
 
 # Global Variables
 theme_plotly = None # None or streamlit
 week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# Layout
+# Config
 st.set_page_config(page_title='NFT Marketplaces - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
+
+# Title
 st.title('🛒 NFT Marketplaces')
 
 # Style
 with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
-# Google Analytics
-st.components.v1.html("""
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-PQ45JJR2R7');
-    </script>
-""", height=1, scrolling=False)
-
 # Data Sources
-@st.cache(ttl=600)
-def get_data(query):
-    if query == 'NFTs Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/a9dee9b9-bfd8-4fed-b49b-a03767306d89/data/latest')
-    elif query == 'NFTs Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/6ec4aca1-3d25-4233-bec2-0443b27d3e6c/data/latest')
-    elif query == 'NFTs Heatmap':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/62fa2182-ca1b-4648-a363-8d1ce591253e/data/latest')
-    elif query == 'NFTs Marketplaces Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/8f4e8520-52af-4d57-b29e-e513f62f8fa9/data/latest')
-    elif query == 'NFTs Marketplaces Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/8fcca211-4bc6-444d-8696-0a583e2966a6/data/latest')
-    elif query == 'NFTs Collections Overview':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/eaa5902c-0206-4fd7-8eb4-b15ecf9a71b4/data/latest')
-    elif query == 'NFTs Collections Daily':
-        return pd.read_json('https://node-api.flipsidecrypto.com/api/v2/queries/3cb9e6f6-849b-47e6-8c7e-b454e1394d6b/data/latest')
-    return None
+nfts_marketplaces_overview = data.get_data('NFTs Marketplaces Overview')
+nfts_marketplaces_daily = data.get_data('NFTs Marketplaces Daily')
 
-nfts_marketplaces_overview = get_data('NFTs Marketplaces Overview')
-nfts_marketplaces_daily = get_data('NFTs Marketplaces Daily')
-
-# Filter the blockchains
+# Filter
 options = st.multiselect(
     '**Select your desired blockchains:**',
     options=nfts_marketplaces_overview['Blockchain'].unique(),
@@ -62,7 +35,7 @@ options = st.multiselect(
 if len(options) == 0:
     st.warning('Please select at least one blockchain to see the metrics.')
 
-# Single chain Analysis
+# Single Chain Analysis
 elif len(options) == 1:
     st.subheader('Overview')
     df = nfts_marketplaces_overview.query('Blockchain == @options')

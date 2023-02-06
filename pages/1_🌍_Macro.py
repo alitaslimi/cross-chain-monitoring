@@ -10,32 +10,23 @@ import data
 theme_plotly = None # None or streamlit
 week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# Layout
+# Config
 st.set_page_config(page_title='Macro - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
+
+# Title
 st.title('🌍 Macro KPIs')
 
-ga = """
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-PQ45JJR2R7');
-    </script>
-"""
-st.markdown(ga, unsafe_allow_html=True)
-
+# Style
 with open('style.css')as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
+# Data Sources
 transactions_overview = data.get_data('Transactions Overview')
 transactions_daily = data.get_data('Transactions Daily')
 transactions_heatmap = data.get_data('Transactions Heatmap')
 transactions_new_users = data.get_data('New Users Daily')
 
-# Filter the blockchains
+# Filter
 options = st.multiselect(
     '**Select your desired blockchains:**',
     options=transactions_overview['Blockchain'].unique(),
@@ -47,7 +38,7 @@ options = st.multiselect(
 if len(options) == 0:
     st.warning('Please select at least one blockchain to see the metrics.')
 
-# Single chain Analysis
+# Single Chain Analysis
 elif len(options) == 1:
     st.subheader('Overview')
     df = transactions_overview.query("Blockchain == @options")
@@ -114,39 +105,49 @@ else:
     c1, c2 = st.columns(2)
     with c1:
         fig = px.bar(df, x='Blockchain', y='Transactions', color='Blockchain', title='Total Transactions', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Transactions', xaxis={'categoryorder':'total ascending'})
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Transactions', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.0f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
         fig = px.bar(df, x='Blockchain', y='TPS', color='Blockchain', title='Average TPS', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Transactions/Second', xaxis={'categoryorder':'total ascending'})
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Transactions/Second', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.0f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     with c2:
-        fig = px.bar(df, x='Blockchain', y='Users', color='Blockchain', title='Total Active Addresses', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Users', xaxis={'categoryorder':'total ascending'})
+        fig = px.bar(df, x='Blockchain', y='Users', color='Blockchain', title='Total Active Addresses')
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Users', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.0f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
-        fig = px.bar(df, x='Blockchain', y='Blocks', color='Blockchain', title='Total Blocks', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Blocks', xaxis={'categoryorder':'total ascending'})
+        fig = px.bar(df, x='Blockchain', y='Blocks', color='Blockchain', title='Total Blocks')
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Blocks', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.0f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     st.subheader('Activity Over Time')
-    df = transactions_daily.query('Blockchain == @options')
-    dfnu = transactions_new_users.query("Blockchain == @options")
-
-    fig = px.line(df, x='Date', y='Transactions', color='Blockchain', title='Daily Total Transactions', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Transactions')
-    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-    fig = px.line(df, x='Date', y='Users', color='Blockchain', title='Daily Active Addresses', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Active Users')
-    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-    fig = px.line(dfnu, x='Date', y='NewUsers', color='Blockchain', title='Daily New Addresses', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='New Users')
-    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     
-    fig = px.line(df, x='Date', y='Blocks', color='Blockchain', title='Daily Blocks', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Blocks')
+    df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'Transactions'], ascending=[False, False])
+    fig = px.line(df, x='Date', y='Transactions', color='Blockchain', custom_data=['Blockchain'], title='Daily Total Transactions', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Transactions', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f}<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+    df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'Users'], ascending=[False, False])
+    fig = px.line(df, x='Date', y='Users', color='Blockchain', custom_data=['Blockchain'], title='Daily Active Users', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Active Users', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f}<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+    df = transactions_new_users.query('Blockchain == @options').sort_values(['Date', 'NewUsers'], ascending=[False, False])
+    fig = px.line(df, x='Date', y='NewUsers', color='Blockchain', custom_data=['Blockchain'], title='Daily New Users', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='New Users', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f}<extra></extra>')
+    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
+
+    df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'Blocks'], ascending=[False, False])
+    fig = px.line(df, x='Date', y='Blocks', color='Blockchain', custom_data=['Blockchain'], title='Daily Blocks', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Blocks', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: %{y:,.0f}<extra></extra>')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     st.subheader('Activity Heatmap')
