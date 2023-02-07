@@ -104,34 +104,42 @@ else:
     df = transactions_overview.query("Blockchain == @options")
 
     fig = px.bar(df, x='Blockchain', y='Fees', color='Blockchain', title='Total Transaction Fees', log_y=True)
-    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Fees [USD]', xaxis={'categoryorder':'total ascending'})
+    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Fees [USD]', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+    fig.update_traces(hovertemplate='%{y:,.0f}<extra></extra>')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     c1, c2 = st.columns(2)
     with c1:
         fig = px.bar(df, x='Blockchain', y='FeeAverage', color='Blockchain', title='Average Fee Amount', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Average Fee [USD]', xaxis={'categoryorder':'total ascending'})
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Average Fee [USD]', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.6f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     with c2:
         fig = px.bar(df, x='Blockchain', y='FeeMedian', color='Blockchain', title='Median Fee Amount', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Median Fee [USD]', xaxis={'categoryorder':'total ascending'})
+        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Median Fee [USD]', xaxis={'categoryorder':'total ascending'}, hovermode='x unified')
+        fig.update_traces(hovertemplate='%{y:,.6f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     st.subheader('Activity Over Time')
-    df = transactions_daily.query("Blockchain == @options")
 
-    fig = px.line(df, x='Date', y='Fees', color='Blockchain', title='Daily Total Transaction Fees', log_y=True)
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Fees [USD]')
+    df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'Fees'], ascending=[False, False])
+    fig = px.line(df, x='Date', y='Fees', color='Blockchain', custom_data=['Blockchain'], title='Daily Total Transaction Fees', log_y=True)
+    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Fees [USD]', hovermode='x unified')
+    fig.update_traces(hovertemplate='%{customdata}: $%{y:,.0f}<extra></extra>')
     st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
     c1, c2 = st.columns(2)
     with c1:
-        fig = px.line(df, x='Date', y='FeeAverage', color='Blockchain', title='Daily Average Fee Amount', log_y=True)
-        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Average Fee [USD]')
+        df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'FeeAverage'], ascending=[False, False])
+        fig = px.line(df, x='Date', y='FeeAverage', color='Blockchain', custom_data=['Blockchain'], title='Daily Average Fee Amount', log_y=True)
+        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Average Fee [USD]', hovermode='x unified')
+        fig.update_traces(hovertemplate='%{customdata}: $%{y:,.6f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     with c2:
-        fig = px.line(df, x='Date', y='FeeMedian', color='Blockchain', title='Daily Median Fee Amount', log_y=True)
-        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Median Fee [USD]')
+        df = transactions_daily.query('Blockchain == @options').sort_values(['Date', 'FeeMedian'], ascending=[False, False])
+        fig = px.line(df, x='Date', y='FeeMedian', color='Blockchain', custom_data=['Blockchain'], title='Daily Median Fee Amount', log_y=True)
+        fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Median Fee [USD]', hovermode='x unified')
+        fig.update_traces(hovertemplate='%{customdata}: $%{y:,.6f}<extra></extra>')
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     
     st.subheader('Activity Heatmap')
