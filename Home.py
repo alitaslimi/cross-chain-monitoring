@@ -6,7 +6,7 @@ from PIL import Image
 st.set_page_config(page_title='Cross Chain Monitoring Tool', page_icon=':bar_chart:', layout='wide')
 
 # Google Analytics
-st.components.v1.html(
+st.components.v1.iframe(
     """
         <!-- Global site tag (gtag.js) - Google Analytics -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-PQ45JJR2R7"></script>
