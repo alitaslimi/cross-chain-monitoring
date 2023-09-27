@@ -13,6 +13,13 @@ week_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 # Config
 st.set_page_config(page_title='Fees - Cross Chain Monitoring', page_icon=':bar_chart:', layout='wide')
 
+# Outlier warning
+st.warning("""
+    The data within this app is no longer being updated. Feel free to check out the same author's
+    new tool called the [Outlier](https://outlier.streamlit.app/) for a better UI/UX and a more
+    modern way of presenting the same set of data.
+""")
+
 # Title
 st.title('🪙 Transaction Fees')
 
