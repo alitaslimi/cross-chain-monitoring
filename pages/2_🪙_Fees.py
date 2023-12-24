@@ -31,7 +31,6 @@ with open('style.css')as f:
 transactions_overview = data.get_data('Transactions Overview')
 transactions_daily = data.get_data('Transactions Daily')
 transactions_heatmap = data.get_data('Transactions Heatmap')
-transactions_fee_payers = data.get_data('Fee Payers')
 
 # Filter
 options = st.multiselect(
@@ -97,13 +96,6 @@ elif len(options) == 1:
         fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title=None, xaxis={'dtick': 1}, coloraxis_colorbar=dict(title='Median [USD]'))
         fig.update_yaxes(categoryorder='array', categoryarray=week_days)
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-    st.subheader('Top Fee Payers')
-    df = transactions_fee_payers.query("Blockchain == @options")
-    fig = px.bar(df, x='User', y='Fees', color='User', title='Total Transaction Fees Paid By Top Fee Payers')
-    fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Fees [USD]', xaxis={'categoryorder':'total ascending'})
-    fig.update_xaxes(type='category')
-    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
 # Cross Chain Comparison
 else:
@@ -199,10 +191,3 @@ else:
         fig.update_xaxes(categoryorder='category ascending')
         fig.update_yaxes(categoryorder='array', categoryarray=week_days, dtick=2)
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    
-    st.subheader('Top Fee Payers')
-    df = transactions_fee_payers.query("Blockchain == @options").sort_values(by='Fees', ascending=False).head(30)
-    fig = px.bar(df, x='User', y='Fees', color='Blockchain', title='Total Transaction Fees Paid By Top Fee Payers')
-    fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title='Fees [USD]', xaxis={'categoryorder':'total ascending'})
-    fig.update_xaxes(type='category')
-    st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
