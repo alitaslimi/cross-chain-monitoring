@@ -31,9 +31,6 @@ with open('style.css')as f:
 transfers_overview = data.get_data('Transfers Overview')
 transfers_daily = data.get_data('Transfers Daily')
 transfers_heatmap = data.get_data('Transfers Heatmap')
-transfers_distribution = data.get_data('Transfers Distribution')
-transfers_transferring_users = data.get_data('Transfers Transferring Users')
-transfers_wallet_types = data.get_data('Transfers Wallet Types')
 
 # Filter
 options = st.multiselect(
@@ -70,35 +67,6 @@ elif len(options) == 1:
         st.metric(label='**Average Volume/User**', value=str(df['Volume/User'].map('{:,.0f}'.format).values[0]), help='USD')
     with c4:
         st.metric(label='**Average Transfers/User**', value=str(df['Transfers/User'].map('{:,.0f}'.format).values[0]))
-    
-    st.subheader('Transferred Amount Distribution')
-    df = transfers_distribution.query('Blockchain == @options')
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        fig = px.pie(df, values='Volume', names='Bucket', title='Share of Total Transferred Volume')
-        fig.update_layout(legend_title='USDC Amount', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c2:
-        fig = px.pie(df, values='Transfers', names='Bucket', title='Share of Total Transfers')
-        fig.update_layout(legend_title='USDC Amount', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c3:
-        fig = px.pie(df, values='Users', names='Bucket', title='Share of Total Transferring Users')
-        fig.update_layout(legend_title='USDC Amount', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    
-    c1, c2 = st.columns(2)
-    with c1:
-        fig = px.bar(df, x='Bucket', y='AmountAverage', color='Bucket', title='Average Transferred Amount', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Average [USD]', xaxis={'categoryorder':'total ascending'})
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c2:
-        fig = px.bar(df, x='Bucket', y='AmountMedian', color='Bucket', title='Median Transferred Amount', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Median [USD]', xaxis={'categoryorder':'total ascending'})
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
     
     st.subheader('Activity Over Time')
     df = transfers_daily.query('Blockchain == @options')
@@ -154,41 +122,9 @@ elif len(options) == 1:
         fig.update_yaxes(categoryorder='array', categoryarray=week_days)
         st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
 
-    st.subheader('Transferring Users')
-    df = transfers_wallet_types.query('Blockchain == @options')
-    c1, c2, c3 = st.columns(3)
-    with c1:
-        fig = px.pie(df, values='Volume', names='Wallet', title='Share of Total Transferred Volume')
-        fig.update_layout(legend_title='Wallet Type', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c2:
-        fig = px.pie(df, values='Transfers', names='Wallet', title='Share of Total Transfers')
-        fig.update_layout(legend_title='Wallet Type', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c3:
-        fig = px.pie(df, values='Users', names='Wallet', title='Share of Total Transferring Users')
-        fig.update_layout(legend_title='Wallet Type', legend_y=0.5)
-        fig.update_traces(textinfo='percent+label', textposition='inside')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-    df = transfers_transferring_users.query('Blockchain == @options')
-    c1, c2 = st.columns(2)
-    with c1:
-        fig = px.bar(df, x='User', y='Transfers', color='User', title='Total Transfers By Top Transferring Users', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Transfers', xaxis={'categoryorder':'total ascending'})
-        fig.update_xaxes(type='category')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-    with c2:
-        fig = px.bar(df, x='User', y='Volume', color='User', title='Total Transferred Volume By Top Transferring Users', log_y=True)
-        fig.update_layout(showlegend=False, xaxis_title=None, yaxis_title='Volume [USD]', xaxis={'categoryorder':'total ascending'})
-        fig.update_xaxes(type='category')
-        st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
 # Cross Chain Comparison
 else:
-    subtab_overview, subtab_heatmap, subtab_distribution = st.tabs(['**Overview**', '**Heatmap**', '**Distribution**'])
+    subtab_overview, subtab_heatmap = st.tabs(['**Overview**', '**Heatmap**'])
 
     with subtab_overview:
         st.subheader('Overview')
@@ -393,33 +329,4 @@ else:
             fig.update_layout(legend_title=None, xaxis_title=None, yaxis_title=None, coloraxis_colorbar=dict(title='Min/Max'))
             fig.update_xaxes(categoryorder='category ascending')
             fig.update_yaxes(categoryorder='array', categoryarray=week_days, dtick=2)
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-    with subtab_distribution:
-        st.subheader('Transferred Amount Distribution')
-        c1, c2 = st.columns(2)
-        df = transfers_distribution.query('Blockchain == @options').sort_values(['Blockchain', 'Bucket'])
-        with c1:
-            fig = px.bar(df, x='Blockchain', y='Volume', color='Bucket', title='Total Transferred Volume', log_y=True)
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title='Volume [USD]', xaxis={'categoryorder':'category ascending'})
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-            fig = px.bar(df, x='Blockchain', y='Transfers', color='Bucket', title='Total Transfers', log_y=True)
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title='Transfers', xaxis={'categoryorder':'category ascending'})
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-            fig = px.bar(df, x='Blockchain', y='Users', color='Bucket', title='Total Transferring Users', log_y=True)
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title='Users', xaxis={'categoryorder':'category ascending'})
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-        with c2:
-            fig = px.histogram(df, x='Blockchain', y='Volume', color='Bucket', title='Share of Total Transferred Volume', barnorm='percent')
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title=None, xaxis={'categoryorder':'category ascending'})
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-            fig = px.histogram(df, x='Blockchain', y='Transfers', color='Bucket', title='Share of Total Transfers', barnorm='percent')
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title=None, xaxis={'categoryorder':'category ascending'})
-            st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
-
-            fig = px.histogram(df, x='Blockchain', y='Users', color='Bucket', title='Share of Total Transferring Users', barnorm='percent')
-            fig.update_layout(legend_title='USDC Amount', xaxis_title=None, yaxis_title=None, xaxis={'categoryorder':'category ascending'})
             st.plotly_chart(fig, use_container_width=True, theme=theme_plotly)
